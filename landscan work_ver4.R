@@ -18,8 +18,12 @@ layer = raster("Peru landscan 2.tif")
 peru = readOGR(dsn="./peruBorder")
 
 ## iterate over key parameters
-for(ij in c(5,7,9)){
-  for(fringeMin in c(250, 500)){
+#matDists = c(5,7,9)
+matDists = c(7)
+#fringeMin = c(250,500)
+fringeMin = c(250)
+for(ij in matDists){
+  for(fringeMin in fringeMin){
     print(paste('smoothing distance:',ij,'fringe thresh:' ,fringeMin))
 
     # reset home path
@@ -185,7 +189,7 @@ settlementPoly = rasterToPolygons(settlementAreas, dissolve=TRUE)
 settlementPoly = settlementPoly[settlementPoly$layer>0,]
 settlementPoly = disaggregate(settlementPoly)
 #settlementPoly@data = data.frame(settlementPoly@data, settlementDF)
-writeOGR(obj = settlementPoly, dsn = "settlement",layer="settlements",driver="ESRI Shapefile")
+writeOGR(obj = settlementPoly, dsn = "settlements",layer="settlements",driver="ESRI Shapefile")
 
 corePoly = rasterToPolygons(coreAreas,dissolve=TRUE)
 corePoly = corePoly[corePoly$layer>0,]
@@ -209,7 +213,7 @@ coreFringeVals[coreFringeVals != 1] = NA
 coreFringeVals[coreFringeVals==1] = smthLyr[coreFringeVals==1]
 
 tmpVal = rasterToPolygons(coreFringeVals, dissolve=FALSE)
-writeOGR(obj = tmpVal, dsn = "coreFringeLandScan",layer="coreFringes",driver="ESRI Shapefile",overwrite_layer=TRUE, delete_dsn=TRUE)
+writeOGR(obj = tmpVal, dsn = "coreFringeLandScan",layer="coreFringe",driver="ESRI Shapefile",overwrite_layer=TRUE, delete_dsn=TRUE)
 
 ## repeat for settlements
 settlementAreaVals = settlementAreas
@@ -217,5 +221,5 @@ settlementAreaVals[settlementAreaVals != 1] = NA
 settlementAreaVals[settlementAreaVals==1] = smthLyr[settlementAreaVals==1]
 
 tmpVal = rasterToPolygons(settlementAreaVals, dissolve=FALSE)
-writeOGR(obj = tmpVal, dsn = "settlementLandScan",layer="settlements",driver="ESRI Shapefile",overwrite_layer=TRUE, delete_dsn=TRUE)
+writeOGR(obj = tmpVal, dsn = "settlementsLandScan",layer="settlements",driver="ESRI Shapefile",overwrite_layer=TRUE, delete_dsn=TRUE)
 }}
